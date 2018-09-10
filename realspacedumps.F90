@@ -1,4 +1,4 @@
-module IO_netcdf
+module realspacedumps
   use param
   use netcdf
   implicit none
@@ -181,5 +181,5 @@ contains
   
 end subroutine ncreadin
 
-end module IO_netcdf
+end module realspacedumps
  
