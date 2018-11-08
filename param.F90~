@@ -8,12 +8,12 @@ module param
 
 ! -----------------------------------------------------------------
 ! Set Model Resolution
-  integer(C_INTPTR_T), parameter :: n1=768, n2=768, n3=768
+  integer(C_INTPTR_T), parameter :: n1=384, n2=384, n3=384
 ! -----------------------------------------------------------------
 
 ! -----------------------------------------------------------------
 ! Set Number of Processors (must divide n2 and iktz)
-  integer, save         :: npe = 192
+  integer, save         :: npe=192
 ! -----------------------------------------------------------------
 
 ! -----------------------------------------------------------------
@@ -26,20 +26,21 @@ module param
 ! -----------------------------------------------------------------
 ! Time
   real, save         :: time                              ! global variable showing time 
-  real,    parameter :: delt  = 0.1/float(max(n1,n2,n3))  ! timestep
-  real,    parameter :: tstop = .015                       ! length of integration
+  real,    parameter :: delt  = 0.1/float(max(n1,n2,n3)) ! timestep
+  real,    parameter :: tstop = 16                        ! length of integration
   integer, parameter :: nstop  = int(tstop/delt)          ! number of timesteps
 
  ! frequency of outputing diagnostics  
-  integer, parameter :: ndiagout = 15                      ! number of times that data dumped in spc/trn/eng/run.list
-  integer, parameter :: ndiagevery=floor(nstop/float(ndiagout))  ! do diagnostics every ndiagevery timesteps
-
+  integer, parameter :: noutput = 80                      ! number of times that data dumped in spc/trn/eng/run.list
+  integer, parameter :: nout=floor(nstop/float(noutput))  ! do diagnostics every nout timesteps
+  integer, parameter :: ndump2spc = 80                    ! number of time 2D spectrum is dumped in output file
+  integer, parameter :: nout2spc=floor(nstop/float(ndump2spc))! dump 2D spectra every nout2spc timesteps
 ! ----------------------------------------------------------------- 
 
 ! -----------------------------------------------------------------
 ! Stratification and Rotation
-  real, parameter :: PrRa =   32                          ! Prandtle Ratio is set = N/f
-  real, parameter :: aj   =   3112                        ! thermal expansivity. NOTE: N^2 = aj*bj
+  real, parameter :: PrRa =   4                           ! Prandtle Ratio is set = N/f
+  real, parameter :: aj   =   288                         ! thermal expansivity. NOTE: N^2 = aj*bj
   real, parameter :: bj   =   aj                          ! background theta gradient
   real, parameter :: bf2  =   aj*bj                       ! Brunt-Vaisalla frequency squared
   real, parameter :: bf   =   sqrt(bf2)                   ! Brunt-Vaisalla frequency
@@ -70,7 +71,7 @@ module param
 ! -----------------------------------------------------------------
 ! Dissipation
   integer, parameter :: ilap = 4, ilap2 = 2*ilap                       ! hyperviscosity order (ilap=1 is regular viscosity)
-  real, parameter    :: visch   =   2e-16                              ! viscosity coeff horizontal
+  real, parameter    :: visch   =   5e-15                              ! viscosity coeff horizontal
   real, parameter    :: viscz   =   visch*(1/PrRa)**(ilap2)            ! viscosity coeff vertical
 ! -----------------------------------------------------------------
 
@@ -85,7 +86,6 @@ module param
   integer, parameter :: nread = 0                        ! flag for reading I.C. from a NetCDF input file
   integer, parameter :: ncwrite = 0                      ! time step at which fields are dumped in a restart netcdf
                                                          ! ncwrite = 0 nothing will be dumped in any output files
-  integer, parameter :: ndump    = nstop  
 ! -----------------------------------------------------------------
 
 ! -----------------------------------------------------------------  

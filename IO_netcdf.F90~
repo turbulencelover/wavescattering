@@ -17,12 +17,13 @@ subroutine check(status)
   end if
 end subroutine check
 
-subroutine ncdumpout(zx,zy,zz,tt)
+subroutine ncdumpout(zx,zy,zz,tt,ts)
   !! Create netcdf files and write the fields for restart (output)
   !! Only zx,zy,zz and tt are dumped in a netcdf file
   implicit none
   include 'mpif.h'
   complex, intent(in),    dimension(iktx,ikty,iktzp) :: zx,zy,zz,tt
+  real,    intent(in)   :: ts
   integer, dimension(4) :: ncdimsk
   integer, dimension(4) :: nccountk,ncstartk
 
@@ -76,7 +77,7 @@ subroutine ncdumpout(zx,zy,zz,tt)
 
   ! wrtie time (time is written only one time so just root process is used
   if (mype.eq.0) then 
-     call check( nf90_put_var(idoutk, idtimek, time) )
+     call check( nf90_put_var(idoutk, idtimek, ts) )
   endif
 
   ! in the z-direction mype=0 is in the first place
